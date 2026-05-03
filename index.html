@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Copenhagen Generator</title>
     <style>
-        /* FONT SCHIBSTED GROTESK */
         @import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;700;900&display=swap');
 
         :root {
@@ -152,7 +151,6 @@
             font-weight: 900;
             line-height: 0.75;
             letter-spacing: -8px;
-            /* Placeholder state before API loads */
             min-width: 250px; 
         }
 
@@ -174,7 +172,7 @@
             background-color: var(--bg-dark);
             color: var(--bg-light);
             padding: 60px;
-            font-size: 65px;
+            font-size: 65px; /* Modificato a 65px */
             font-weight: 400;
             line-height: 1.05;
             letter-spacing: -3px;
@@ -224,8 +222,9 @@
                     <div class="pollutant-val" id="pm25-val">--</div>
                     <div class="pollutant-unit">µg/m³</div>
 
-                    <div class="pollutant-name">PM10</div>
-                    <div class="pollutant-val" id="pm10-val">--</div>
+                    <!-- SOSTITUITO PM10 CON CO -->
+                    <div class="pollutant-name">CO</div>
+                    <div class="pollutant-val" id="co-val">--</div>
                     <div class="pollutant-unit">µg/m³</div>
 
                     <div class="pollutant-name">NO₂</div>
@@ -245,7 +244,6 @@
     </div>
 
     <script>
-        // 1. GESTIONE DELLA DATA
         const today = new Date();
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
         const monthsText = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
@@ -256,11 +254,10 @@
         document.getElementById('month-num').textContent = String(today.getMonth() + 1).padStart(2, '0');
         document.getElementById('month-text').textContent = monthsText[today.getMonth()];
 
-        // 2. FUNZIONE PER APPLICARE I DATI AL DESIGN
-        function applyDesign(aqi, pm25, pm10, no2, o3) {
+        function applyDesign(aqi, pm25, co, no2, o3) {
             document.getElementById('aqi-value').textContent = aqi;
             document.getElementById('pm25-val').textContent = pm25;
-            document.getElementById('pm10-val').textContent = pm10;
+            document.getElementById('co-val').textContent = co;
             document.getElementById('no2-val').textContent = no2;
             document.getElementById('o3-val').textContent = o3;
 
@@ -312,7 +309,6 @@
             document.getElementById('message-text').textContent = randomMsg;
         }
 
-        // 3. CHIAMATA API IN TEMPO REALE AL CARICAMENTO DELLA PAGINA
         const token = '98ea0fc366155d8052e52647587f3e246ef7f41f';
         const apiUrl = `https://api.waqi.info/feed/copenhagen/?token=${token}`;
 
@@ -323,13 +319,12 @@
                     const aqi = data.data.aqi;
                     const iaqi = data.data.iaqi;
                     
-                    // Preleviamo i singoli valori. Se un sensore non trasmette oggi, mostra "--"
                     const pm25 = iaqi.pm25 ? iaqi.pm25.v : '--';
-                    const pm10 = iaqi.pm10 ? iaqi.pm10.v : '--';
+                    const co = iaqi.co ? iaqi.co.v : '--';
                     const no2 = iaqi.no2 ? iaqi.no2.v : '--';
                     const o3 = iaqi.o3 ? iaqi.o3.v : '--';
 
-                    applyDesign(aqi, pm25, pm10, no2, o3);
+                    applyDesign(aqi, pm25, co, no2, o3);
                 } else {
                     console.error("API error:", data.data);
                     applyDesign('--', '--', '--', '--', '--');
