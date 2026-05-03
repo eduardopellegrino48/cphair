@@ -9,7 +9,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;700;900&display=swap');
 
         :root {
-            /* Colori di default (Good) - Verranno sovrascritti dal JS */
             --bg-light: #B9F2D9; 
             --bg-dark: #0A8255;
             --font-main: 'Schibsted Grotesk', sans-serif;
@@ -70,9 +69,10 @@
             align-items: flex-end;
         }
 
+        /* NUMERI DATA IN REGULAR (400) */
         .date-num {
             font-size: 260px;
-            font-weight: 700;
+            font-weight: 400; 
             line-height: 0.8;
             letter-spacing: -8px;
         }
@@ -86,13 +86,19 @@
             margin-top: 10px;
         }
 
+        /* FIX LOGO AGGIORNATO */
         .logo-container {
             width: 180px;
             height: 180px;
             background-color: var(--bg-dark);
-            /* Qui ho lasciato il tuo nome file esatto! */
-            mask: url('Koebenhavnermaerke_RGB_Blaa.svg') no-repeat center / contain;
-            -webkit-mask: url('Koebenhavnermaerke_RGB_Blaa.svg') no-repeat center / contain;
+            -webkit-mask-image: url('./logo.svg');
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: contain;
+            mask-image: url('./logo.svg');
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
         }
 
         hr {
@@ -102,6 +108,7 @@
             margin: 30px 0;
         }
 
+        /* FIX ALLINEAMENTO ALLA BASE */
         .category-row {
             display: flex;
             justify-content: space-between;
@@ -111,8 +118,8 @@
         .category-label {
             font-size: 30px;
             font-weight: 400;
-            margin-bottom: 25px;
             letter-spacing: -1px;
+            margin-bottom: 12px;
         }
 
         .category-value {
@@ -123,7 +130,6 @@
             text-align: right;
             letter-spacing: -4px;
             max-width: 700px;
-            word-wrap: break-word;
         }
 
         .data-row {
@@ -279,38 +285,39 @@
             bgLight = "#FFF2B2"; 
             bgDark = "#D49A00";  
             defaultMsg = "Most people can enjoy outdoor activities.";
-            document.getElementById('category-value').style.fontSize = "150px";
+            document.getElementById('category-value').style.fontSize = "125px";
         } else if (aqi <= 150) {
-            category = "UNHEALTHY FOR SENSITIVE GROUPS";
+            category = "UNHEALTHY<br>FOR SENSITIVE<br>GROUPS"; 
             bgLight = "#FDE0C4"; 
             bgDark = "#D87A2B";  
             defaultMsg = "Sensitive individuals should take it easy outdoors.";
-            document.getElementById('category-value').style.fontSize = "95px"; 
+            document.getElementById('category-value').style.fontSize = "85px"; 
             document.getElementById('category-value').style.lineHeight = "0.9";
         } else if (aqi <= 200) {
-            category = "UNHEALTHY";
+            category = "UNHEALTHY"; 
             bgLight = "#FF99AA"; 
             bgDark = "#B41C3C";  
             defaultMsg = "Consider staying indoors.";
-            document.getElementById('category-value').style.fontSize = "130px";
+            document.getElementById('category-value').style.fontSize = "115px";
         } else if (aqi <= 300) {
-            category = "VERY UNHEALTHY";
+            category = "VERY<br>UNHEALTHY"; 
             bgLight = "#C89DFC"; 
             bgDark = "#6414A4";  
             defaultMsg = "Avoid outdoor activities if possible.";
-            document.getElementById('category-value').style.fontSize = "110px";
+            document.getElementById('category-value').style.fontSize = "115px";
             document.getElementById('category-value').style.lineHeight = "0.9";
         } else {
-            category = "HAZARDOUS";
+            category = "HAZARDOUS"; 
             bgLight = "#F04C7C"; 
             bgDark = "#740C24";  
             defaultMsg = "Stay indoors and keep windows closed.";
-            document.getElementById('category-value').style.fontSize = "130px";
+            document.getElementById('category-value').style.fontSize = "115px";
         }
 
         document.documentElement.style.setProperty('--bg-light', bgLight);
         document.documentElement.style.setProperty('--bg-dark', bgDark);
-        document.getElementById('category-value').textContent = category;
+        
+        document.getElementById('category-value').innerHTML = category;
         document.getElementById('message-text').textContent = customMsg ? decodeURIComponent(customMsg) : defaultMsg;
 
     </script>
