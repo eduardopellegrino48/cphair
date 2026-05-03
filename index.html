@@ -5,31 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Copenhagen Generator</title>
     <style>
-        /* 
-         * SETUP BASE E FONT
-         * Usa un font standard se Akzidenz-Grotesk non è installato sul server.
-         * Puoi caricare il tuo font personalizzato tramite @font-face se lo possiedi.
-         */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        /* FONT SCHIBSTED GROTESK */
+        @import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;700;900&display=swap');
 
         :root {
             /* Colori di default (Good) - Verranno sovrascritti dal JS */
             --bg-light: #B9F2D9; 
             --bg-dark: #0A8255;
-            --font-main: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-main: 'Schibsted Grotesk', sans-serif;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: #333; /* Sfondo scuro fuori dal post */
+            background-color: #333; 
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* CONTENITORE PRINCIPALE (Formato Instagram Portrait 4:5) */
         #poster {
             width: 1080px;
             height: 1350px;
@@ -41,10 +36,8 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            /* Se lo vedi troppo grande sul tuo schermo, l'API di screenshot lo vedrà comunque perfetto */
         }
 
-        /* MARGINI INTERNI */
         .content {
             padding: 60px;
             flex-grow: 1;
@@ -52,18 +45,16 @@
             flex-direction: column;
         }
 
-        /* HEADER */
         header {
             display: flex;
             justify-content: space-between;
             font-size: 32px;
             text-transform: uppercase;
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: -1px;
             margin-bottom: 20px;
         }
 
-        /* DATA ROW */
         .date-row {
             display: flex;
             justify-content: space-between;
@@ -88,24 +79,22 @@
 
         .date-text {
             font-size: 90px;
-            font-weight: 300;
+            font-weight: 400;
             line-height: 1;
             text-transform: uppercase;
             letter-spacing: -3px;
             margin-top: 10px;
         }
 
-        /* LOGO COMUNE DI COPENHAGEN */
         .logo-container {
             width: 180px;
             height: 180px;
-            /* TRUCCO MAGICO: Usa la maschera per colorare l'SVG nero del colore dinamico! */
             background-color: var(--bg-dark);
-            mask: url('logo.svg') no-repeat center / contain;
-            -webkit-mask: url('logo.svg') no-repeat center / contain;
+            /* Qui ho lasciato il tuo nome file esatto! */
+            mask: url('Koebenhavnermaerke_RGB_Blaa.svg') no-repeat center / contain;
+            -webkit-mask: url('Koebenhavnermaerke_RGB_Blaa.svg') no-repeat center / contain;
         }
 
-        /* LINEE DIVISORIE */
         hr {
             border: none;
             border-top: 3px solid var(--bg-dark);
@@ -113,7 +102,6 @@
             margin: 30px 0;
         }
 
-        /* CATEGORY ROW */
         .category-row {
             display: flex;
             justify-content: space-between;
@@ -138,7 +126,6 @@
             word-wrap: break-word;
         }
 
-        /* DATA ROW */
         .data-row {
             display: flex;
             justify-content: space-between;
@@ -173,17 +160,16 @@
             margin-right: 20px;
         }
 
-        .pollutant-name { font-weight: 300; }
+        .pollutant-name { font-weight: 400; }
         .pollutant-val { font-weight: 700; text-align: right; }
         .pollutant-unit { font-size: 20px; font-weight: 700; margin-top: 8px;}
 
-        /* FOOTER BANNER */
         .message-banner {
             background-color: var(--bg-dark);
             color: var(--bg-light);
             padding: 60px;
             font-size: 80px;
-            font-weight: 300;
+            font-weight: 400;
             line-height: 1.05;
             letter-spacing: -3px;
         }
@@ -204,7 +190,6 @@
                     <span class="date-text" id="day-text">WED</span>
                 </div>
                 
-                <!-- INSERISCI QUI IL NOME DEL TUO FILE SVG (es. logo.svg) -->
                 <div class="logo-container"></div>
                 
                 <div class="date-block right">
@@ -254,10 +239,8 @@
     </div>
 
     <script>
-        // 1. LEGGI I DATI DALL'URL
         const params = new URLSearchParams(window.location.search);
         
-        // Imposta i valori di default per testare se non ci sono parametri
         const aqi = parseInt(params.get('aqi')) || 26;
         const pm25 = params.get('pm25') || '4.5';
         const pm10 = params.get('pm10') || '12.0';
@@ -265,7 +248,6 @@
         const o3 = params.get('o3') || '64.5';
         const customMsg = params.get('msg') || '';
 
-        // 2. GESTIONE DELLA DATA DINAMICA
         const today = new Date();
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
         const monthsText = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
@@ -276,66 +258,59 @@
         document.getElementById('month-num').textContent = String(today.getMonth() + 1).padStart(2, '0');
         document.getElementById('month-text').textContent = monthsText[today.getMonth()];
 
-        // 3. INSERISCI I DATI DEI POLLUTANTI
         document.getElementById('aqi-value').textContent = aqi;
         document.getElementById('pm25-val').textContent = pm25;
         document.getElementById('pm10-val').textContent = pm10;
         document.getElementById('no2-val').textContent = no2;
         document.getElementById('o3-val').textContent = o3;
 
-        // 4. LOGICA COLORI E CATEGORIA BASATA SU TABELLA IQAir
         let category = "";
         let bgLight = "", bgDark = "";
         let defaultMsg = "";
 
         if (aqi <= 50) {
             category = "GOOD";
-            bgLight = "#B9F2D9"; // Verde menta
-            bgDark = "#0A8255";  // Verde scuro
+            bgLight = "#B9F2D9"; 
+            bgDark = "#0A8255";  
             defaultMsg = "Perfect day for outdoor activities.";
             document.getElementById('category-value').style.fontSize = "150px";
         } else if (aqi <= 100) {
             category = "MODERATE";
-            bgLight = "#FFF2B2"; // Giallo tenue
-            bgDark = "#D49A00";  // Giallo/Senape scuro
+            bgLight = "#FFF2B2"; 
+            bgDark = "#D49A00";  
             defaultMsg = "Most people can enjoy outdoor activities.";
             document.getElementById('category-value').style.fontSize = "150px";
         } else if (aqi <= 150) {
             category = "UNHEALTHY FOR SENSITIVE GROUPS";
-            bgLight = "#FDE0C4"; // Arancio pesca
-            bgDark = "#D87A2B";  // Arancio scuro
+            bgLight = "#FDE0C4"; 
+            bgDark = "#D87A2B";  
             defaultMsg = "Sensitive individuals should take it easy outdoors.";
-            // Riduciamo il font perché la frase è lunga
             document.getElementById('category-value').style.fontSize = "95px"; 
             document.getElementById('category-value').style.lineHeight = "0.9";
         } else if (aqi <= 200) {
             category = "UNHEALTHY";
-            bgLight = "#FF99AA"; // Rosa/Rosso tenue
-            bgDark = "#B41C3C";  // Rosso intenso
+            bgLight = "#FF99AA"; 
+            bgDark = "#B41C3C";  
             defaultMsg = "Consider staying indoors.";
             document.getElementById('category-value').style.fontSize = "130px";
         } else if (aqi <= 300) {
             category = "VERY UNHEALTHY";
-            bgLight = "#C89DFC"; // Lilla/Viola chiaro
-            bgDark = "#6414A4";  // Viola scuro
+            bgLight = "#C89DFC"; 
+            bgDark = "#6414A4";  
             defaultMsg = "Avoid outdoor activities if possible.";
             document.getElementById('category-value').style.fontSize = "110px";
             document.getElementById('category-value').style.lineHeight = "0.9";
         } else {
             category = "HAZARDOUS";
-            bgLight = "#F04C7C"; // Rosso acceso/Magenta scuro
-            bgDark = "#740C24";  // Bordeaux
+            bgLight = "#F04C7C"; 
+            bgDark = "#740C24";  
             defaultMsg = "Stay indoors and keep windows closed.";
             document.getElementById('category-value').style.fontSize = "130px";
         }
 
-        // 5. APPLICA STILI E TESTI
         document.documentElement.style.setProperty('--bg-light', bgLight);
         document.documentElement.style.setProperty('--bg-dark', bgDark);
-        
         document.getElementById('category-value').textContent = category;
-        
-        // Se c'è un messaggio generato dall'AI tramite parametro "msg", usa quello, altrimenti usa il default
         document.getElementById('message-text').textContent = customMsg ? decodeURIComponent(customMsg) : defaultMsg;
 
     </script>
