@@ -152,6 +152,8 @@
             font-weight: 900;
             line-height: 0.75;
             letter-spacing: -8px;
+            /* Placeholder state before API loads */
+            min-width: 250px; 
         }
 
         .pollutants-table {
@@ -190,15 +192,15 @@
 
             <section class="date-row">
                 <div class="date-block">
-                    <span class="date-num" id="day-num">18</span>
-                    <span class="date-text" id="day-text">WED</span>
+                    <span class="date-num" id="day-num">--</span>
+                    <span class="date-text" id="day-text">--</span>
                 </div>
                 
                 <div class="logo-container"></div>
                 
                 <div class="date-block right">
-                    <span class="date-num" id="month-num">03</span>
-                    <span class="date-text" id="month-text">MARCH</span>
+                    <span class="date-num" id="month-num">--</span>
+                    <span class="date-text" id="month-text">--</span>
                 </div>
             </section>
 
@@ -206,7 +208,7 @@
 
             <section class="category-row">
                 <div class="category-label">AIR QUALITY IS</div>
-                <div class="category-value" id="category-value">GOOD</div>
+                <div class="category-value" id="category-value">LOADING...</div>
             </section>
 
             <hr>
@@ -214,43 +216,36 @@
             <section class="data-row">
                 <div class="aqi-block">
                     <span class="aqi-label">AQI (Air Quality Index):</span>
-                    <span class="aqi-value" id="aqi-value">26</span>
+                    <span class="aqi-value" id="aqi-value">--</span>
                 </div>
 
                 <div class="pollutants-table">
                     <div class="pollutant-name">PM2.5</div>
-                    <div class="pollutant-val" id="pm25-val">4.5</div>
+                    <div class="pollutant-val" id="pm25-val">--</div>
                     <div class="pollutant-unit">µg/m³</div>
 
                     <div class="pollutant-name">PM10</div>
-                    <div class="pollutant-val" id="pm10-val">12.0</div>
+                    <div class="pollutant-val" id="pm10-val">--</div>
                     <div class="pollutant-unit">µg/m³</div>
 
                     <div class="pollutant-name">NO₂</div>
-                    <div class="pollutant-val" id="no2-val">15.1</div>
+                    <div class="pollutant-val" id="no2-val">--</div>
                     <div class="pollutant-unit">µg/m³</div>
 
                     <div class="pollutant-name">O₃</div>
-                    <div class="pollutant-val" id="o3-val">64.5</div>
+                    <div class="pollutant-val" id="o3-val">--</div>
                     <div class="pollutant-unit">µg/m³</div>
                 </div>
             </section>
         </div>
 
         <footer class="message-banner" id="message-text">
-            Fresh air day in Copenhagen!
+            Fetching today's air quality...
         </footer>
     </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        
-        const aqi = parseInt(params.get('aqi')) || 26;
-        const pm25 = params.get('pm25') || '4.5';
-        const pm10 = params.get('pm10') || '12.0';
-        const no2 = params.get('no2') || '15.1';
-        const o3 = params.get('o3') || '64.5';
-
+        // 1. GESTIONE DELLA DATA
         const today = new Date();
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
         const monthsText = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
@@ -261,203 +256,88 @@
         document.getElementById('month-num').textContent = String(today.getMonth() + 1).padStart(2, '0');
         document.getElementById('month-text').textContent = monthsText[today.getMonth()];
 
-        document.getElementById('aqi-value').textContent = aqi;
-        document.getElementById('pm25-val').textContent = pm25;
-        document.getElementById('pm10-val').textContent = pm10;
-        document.getElementById('no2-val').textContent = no2;
-        document.getElementById('o3-val').textContent = o3;
+        // 2. FUNZIONE PER APPLICARE I DATI AL DESIGN
+        function applyDesign(aqi, pm25, pm10, no2, o3) {
+            document.getElementById('aqi-value').textContent = aqi;
+            document.getElementById('pm25-val').textContent = pm25;
+            document.getElementById('pm10-val').textContent = pm10;
+            document.getElementById('no2-val').textContent = no2;
+            document.getElementById('o3-val').textContent = o3;
 
-        let category = "";
-        let bgLight = "", bgDark = "";
-        let randomMsg = "";
+            let category = "";
+            let bgLight = "", bgDark = "";
+            let randomMsg = "";
 
-        if (aqi <= 50) {
-            category = "GOOD";
-            bgLight = "#B9F2D9"; 
-            bgDark = "#0A8255";  
-            document.getElementById('category-value').style.fontSize = "150px";
-            
-            const msgs = [
-                "The air is pristine. Go hug a mermaid.",
-                "Perfect day for a bike ride to Dragør.",
-                "Fresh air! Time for a walk along the canals.",
-                "Air so clean you could bottle and sell it.",
-                "Grab a pastry and eat it outside, zero guilt.",
-                "100% pure Copenhagen breeze. Enjoy!",
-                "Cancel your indoor plans. The outdoors are calling.",
-                "Breathe in deeply. That’s the smell of pure hygge.",
-                "A perfect excuse to skip the metro and walk.",
-                "The Little Mermaid is enjoying this breeze, you should too.",
-                "Take your coffee to-go. The air is delicious today.",
-                "No pollution concerns. Just watch out for seagulls.",
-                "Ideal weather to flex your cargo bike skills.",
-                "Fresh air day in Copenhagen! Get out there.",
-                "Your lungs will thank you for a jog in Fælledparken.",
-                "Crisp, clean, and perfectly Scandinavian.",
-                "The air quality is basically showing off today.",
-                "A flawless day to get lost in Nørrebro.",
-                "Roll the windows down... or just ride your bike.",
-                "So fresh, even the swans are in a good mood."
-            ];
-            randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            if (aqi <= 50) {
+                category = "GOOD";
+                bgLight = "#B9F2D9"; bgDark = "#0A8255";  
+                document.getElementById('category-value').style.fontSize = "150px";
+                const msgs = ["The air is pristine. Go hug a mermaid.", "Perfect day for a bike ride to Dragør.", "Fresh air! Time for a walk along the canals.", "Air so clean you could bottle and sell it.", "Grab a pastry and eat it outside, zero guilt.", "100% pure Copenhagen breeze. Enjoy!", "Cancel your indoor plans. The outdoors are calling.", "Breathe in deeply. That’s the smell of pure hygge.", "A perfect excuse to skip the metro and walk.", "The Little Mermaid is enjoying this breeze, you should too.", "Take your coffee to-go. The air is delicious today.", "No pollution concerns. Just watch out for seagulls.", "Ideal weather to flex your cargo bike skills.", "Fresh air day in Copenhagen! Get out there.", "Your lungs will thank you for a jog in Fælledparken.", "Crisp, clean, and perfectly Scandinavian.", "The air quality is basically showing off today.", "A flawless day to get lost in Nørrebro.", "Roll the windows down... or just ride your bike.", "So fresh, even the swans are in a good mood."];
+                randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            } else if (aqi <= 100) {
+                category = "MODERATE";
+                bgLight = "#FFF2B2"; bgDark = "#D49A00";  
+                document.getElementById('category-value').style.fontSize = "125px";
+                const msgs = ["Air quality is decent. Proceed with your normal hygge.", "Not perfect, but still great for a canal tour.", "Most people can enjoy outdoor activities. Go for it.", "A normal day in CPH. Grab a coffee and stroll.", "Sensitive lungs might notice it, but overall pretty good.", "Air pollution levels are moderate. Keep pedaling.", "Good enough for a picnic at Kongens Have.", "Nothing stopping you from a walk in Vesterbro.", "It's fine out there, just breathe normally.", "Acceptable air. Better than a damp basement.", "Solid 'meh' air quality, but we've seen worse.", "You can still run, but maybe don't break a world record.", "Decent breeze. Go find a nice bakery.", "Fair to middling. Still a beautiful day in Denmark.", "Not crystal clear, but definitely outdoor-worthy.", "Go outside, unless you're incredibly allergic to average air.", "It's a good day to be a regular breather.", "Nothing a good Danish pastry can't fix.", "Outdoor exercise is generally safe today.", "Average air for an above-average city."];
+                randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            } else if (aqi <= 150) {
+                category = "UNHEALTHY<br>FOR SENSITIVE<br>GROUPS"; 
+                bgLight = "#FDE0C4"; bgDark = "#D87A2B";  
+                document.getElementById('category-value').style.fontSize = "85px"; document.getElementById('category-value').style.lineHeight = "0.9";
+                const msgs = ["Air's a bit thick. Maybe skip the marathon today.", "Sensitive? Take it easy. Tough? Still take it easy.", "Not the best air today. Museums are looking appealing.", "Asthma acting up? Stay inside and bake some kanelsnegle.", "A great day to explore Copenhagen's indoor cafes.", "Pollution is elevated. Don't breathe too enthusiastically.", "Maybe a slow walk instead of a fast sprint.", "Air quality is a bit moody today, just like the weather.", "Good day for indoor hygge if you have sensitive lungs.", "The air is feeling a bit heavy. Coffee indoors?", "Take the metro today instead of biking uphill.", "Not the crispest breeze. Sensitive folks, beware.", "A bit smoggy. Perfect excuse to stay in bed longer.", "Let's keep the intense outdoor workouts to a minimum.", "Your lungs might prefer a trip to the cinema today.", "It's officially a 'read a book by the window' kind of day.", "The air is testing us. Let's retreat to a bakery.", "If you cough, it's not you, it's the air.", "Consider lighter outdoor activities today. Chill out.", "Sensitive groups: give your lungs a day off."];
+                randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            } else if (aqi <= 200) {
+                category = "UNHEALTHY"; 
+                bgLight = "#FF99AA"; bgDark = "#B41C3C";  
+                document.getElementById('category-value').style.fontSize = "115px";
+                const msgs = ["The air is heavy. Retreat to Absalon for some indoor fun.", "Air pollution is high. Time to appreciate indoor plumbing.", "Not a great day for a run. Your lungs will protest.", "Consider staying indoors. Netflix is calling.", "Limit outdoor activity. The air is basically soup.", "Air quality is unhealthy. Good excuse to avoid the gym.", "Copenhagen looks better from behind a closed window today.", "Yikes, the air is spicy. Stay inside.", "A perfect day to discover a new museum.", "Let's agree to just breathe less today.", "Stay in, order food, ignore the outside world.", "The Little Mermaid is holding her breath today.", "If you must go out, don't run. Just casually saunter.", "It's a 'work from home in your pajamas' level of air.", "The air is currently failing its vibe check.", "Not the day to practice your deep breathing exercises.", "Keep the windows shut and the coffee hot.", "Unhealthy air outside. Keep it hygge inside.", "Time to explore Copenhagen's beautiful indoor architecture.", "Your bike can take a rest day today."];
+                randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            } else if (aqi <= 300) {
+                category = "VERY<br>UNHEALTHY"; 
+                bgLight = "#C89DFC"; bgDark = "#6414A4";  
+                document.getElementById('category-value').style.fontSize = "115px"; document.getElementById('category-value').style.lineHeight = "0.9";
+                const msgs = ["Very unhealthy air. Seriously, just stay inside.", "Avoid outdoor activities. The air is officially angry.", "It's gross out there. Hug your air purifier.", "Stay indoors as much as possible. Do a puzzle.", "The air is toxic. Good thing Danish design is beautiful indoors.", "Only go out if you absolutely have to. And don't breathe.", "It's a hazard to your health. Go back to sleep.", "Even the pigeons are staying home today.", "Turn on the air purifier and pretend the outside doesn't exist.", "Bad air day. A fantastic reason to be lazy.", "No biking today. We strictly forbid it.", "The atmosphere is heavily polluted. Protect your lungs.", "If you look outside and it looks chewy, stay in.", "We highly recommend the indoor lifestyle today.", "Your couch is the safest place in Copenhagen right now.", "Avoid the outdoors like it's a tourist trap.", "Very bad air. Don't even open the window to complain.", "Time for an indoor movie marathon. Doctor's orders.", "The city is essentially a giant exhaust pipe today.", "Keep the outside out. Stay safe and cozy inside."];
+                randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            } else {
+                category = "HAZARDOUS"; 
+                bgLight = "#F04C7C"; bgDark = "#740C24";  
+                document.getElementById('category-value').style.fontSize = "115px";
+                const msgs = ["Hazardous air! Do not go outside. We mean it.", "It's an air quality apocalypse. Seal the doors.", "Breathing outside is currently an extreme sport.", "Stay indoors. Keep windows closed. Panic mildly.", "Air pollution is at dangerous levels. Just don't.", "Outdoor activity is strongly discouraged. Seriously.", "The air is lava. Stay inside the house.", "If you step outside, you might dissolve. (Kidding, but stay in).", "Emergency levels of bad air. Hibernate immediately.", "Hazardous! Treat the outdoors like a quarantine zone.", "Lock the doors, close the vents, wait it out.", "The sky is toxic. Good luck out there.", "It's a biohazard out there. Stick to indoor hygge.", "Only venture out if you have a spacesuit.", "This is not a drill. The air is legitimately dangerous.", "Absolute worst air possible. Protect yourself.", "We recommend breathing exclusively canned air today.", "Hazardous conditions. Stay inside and stay safe.", "Do not let the fresh air propaganda fool you today.", "Zero stars. Would not recommend breathing today."];
+                randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            }
 
-        } else if (aqi <= 100) {
-            category = "MODERATE";
-            bgLight = "#FFF2B2"; 
-            bgDark = "#D49A00";  
-            document.getElementById('category-value').style.fontSize = "125px";
-            
-            const msgs = [
-                "Air quality is decent. Proceed with your normal hygge.",
-                "Not perfect, but still great for a canal tour.",
-                "Most people can enjoy outdoor activities. Go for it.",
-                "A normal day in CPH. Grab a coffee and stroll.",
-                "Sensitive lungs might notice it, but overall pretty good.",
-                "Air pollution levels are moderate. Keep pedaling.",
-                "Good enough for a picnic at Kongens Have.",
-                "Nothing stopping you from a walk in Vesterbro.",
-                "It's fine out there, just breathe normally.",
-                "Acceptable air. Better than a damp basement.",
-                "Solid 'meh' air quality, but we've seen worse.",
-                "You can still run, but maybe don't break a world record.",
-                "Decent breeze. Go find a nice bakery.",
-                "Fair to middling. Still a beautiful day in Denmark.",
-                "Not crystal clear, but definitely outdoor-worthy.",
-                "Go outside, unless you're incredibly allergic to average air.",
-                "It's a good day to be a regular breather.",
-                "Nothing a good Danish pastry can't fix.",
-                "Outdoor exercise is generally safe today.",
-                "Average air for an above-average city."
-            ];
-            randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-
-        } else if (aqi <= 150) {
-            category = "UNHEALTHY<br>FOR SENSITIVE<br>GROUPS"; 
-            bgLight = "#FDE0C4"; 
-            bgDark = "#D87A2B";  
-            document.getElementById('category-value').style.fontSize = "85px"; 
-            document.getElementById('category-value').style.lineHeight = "0.9";
-            
-            const msgs = [
-                "Air's a bit thick. Maybe skip the marathon today.",
-                "Sensitive? Take it easy. Tough? Still take it easy.",
-                "Not the best air today. Museums are looking appealing.",
-                "Asthma acting up? Stay inside and bake some kanelsnegle.",
-                "A great day to explore Copenhagen's indoor cafes.",
-                "Pollution is elevated. Don't breathe too enthusiastically.",
-                "Maybe a slow walk instead of a fast sprint.",
-                "Air quality is a bit moody today, just like the weather.",
-                "Good day for indoor hygge if you have sensitive lungs.",
-                "The air is feeling a bit heavy. Coffee indoors?",
-                "Take the metro today instead of biking uphill.",
-                "Not the crispest breeze. Sensitive folks, beware.",
-                "A bit smoggy. Perfect excuse to stay in bed longer.",
-                "Let's keep the intense outdoor workouts to a minimum.",
-                "Your lungs might prefer a trip to the cinema today.",
-                "It's officially a 'read a book by the window' kind of day.",
-                "The air is testing us. Let's retreat to a bakery.",
-                "If you cough, it's not you, it's the air.",
-                "Consider lighter outdoor activities today. Chill out.",
-                "Sensitive groups: give your lungs a day off."
-            ];
-            randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-
-        } else if (aqi <= 200) {
-            category = "UNHEALTHY"; 
-            bgLight = "#FF99AA"; 
-            bgDark = "#B41C3C";  
-            document.getElementById('category-value').style.fontSize = "115px";
-            
-            const msgs = [
-                "The air is heavy. Retreat to Absalon for some indoor fun.",
-                "Air pollution is high. Time to appreciate indoor plumbing.",
-                "Not a great day for a run. Your lungs will protest.",
-                "Consider staying indoors. Netflix is calling.",
-                "Limit outdoor activity. The air is basically soup.",
-                "Air quality is unhealthy. Good excuse to avoid the gym.",
-                "Copenhagen looks better from behind a closed window today.",
-                "Yikes, the air is spicy. Stay inside.",
-                "A perfect day to discover a new museum.",
-                "Let's agree to just breathe less today.",
-                "Stay in, order food, ignore the outside world.",
-                "The Little Mermaid is holding her breath today.",
-                "If you must go out, don't run. Just casually saunter.",
-                "It's a 'work from home in your pajamas' level of air.",
-                "The air is currently failing its vibe check.",
-                "Not the day to practice your deep breathing exercises.",
-                "Keep the windows shut and the coffee hot.",
-                "Unhealthy air outside. Keep it hygge inside.",
-                "Time to explore Copenhagen's beautiful indoor architecture.",
-                "Your bike can take a rest day today."
-            ];
-            randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-
-        } else if (aqi <= 300) {
-            category = "VERY<br>UNHEALTHY"; 
-            bgLight = "#C89DFC"; 
-            bgDark = "#6414A4";  
-            document.getElementById('category-value').style.fontSize = "115px";
-            document.getElementById('category-value').style.lineHeight = "0.9";
-            
-            const msgs = [
-                "Very unhealthy air. Seriously, just stay inside.",
-                "Avoid outdoor activities. The air is officially angry.",
-                "It's gross out there. Hug your air purifier.",
-                "Stay indoors as much as possible. Do a puzzle.",
-                "The air is toxic. Good thing Danish design is beautiful indoors.",
-                "Only go out if you absolutely have to. And don't breathe.",
-                "It's a hazard to your health. Go back to sleep.",
-                "Even the pigeons are staying home today.",
-                "Turn on the air purifier and pretend the outside doesn't exist.",
-                "Bad air day. A fantastic reason to be lazy.",
-                "No biking today. We strictly forbid it.",
-                "The atmosphere is heavily polluted. Protect your lungs.",
-                "If you look outside and it looks chewy, stay in.",
-                "We highly recommend the indoor lifestyle today.",
-                "Your couch is the safest place in Copenhagen right now.",
-                "Avoid the outdoors like it's a tourist trap.",
-                "Very bad air. Don't even open the window to complain.",
-                "Time for an indoor movie marathon. Doctor's orders.",
-                "The city is essentially a giant exhaust pipe today.",
-                "Keep the outside out. Stay safe and cozy inside."
-            ];
-            randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-
-        } else {
-            category = "HAZARDOUS"; 
-            bgLight = "#F04C7C"; 
-            bgDark = "#740C24";  
-            document.getElementById('category-value').style.fontSize = "115px";
-            
-            const msgs = [
-                "Hazardous air! Do not go outside. We mean it.",
-                "It's an air quality apocalypse. Seal the doors.",
-                "Breathing outside is currently an extreme sport.",
-                "Stay indoors. Keep windows closed. Panic mildly.",
-                "Air pollution is at dangerous levels. Just don't.",
-                "Outdoor activity is strongly discouraged. Seriously.",
-                "The air is lava. Stay inside the house.",
-                "If you step outside, you might dissolve. (Kidding, but stay in).",
-                "Emergency levels of bad air. Hibernate immediately.",
-                "Hazardous! Treat the outdoors like a quarantine zone.",
-                "Lock the doors, close the vents, wait it out.",
-                "The sky is toxic. Good luck out there.",
-                "It's a biohazard out there. Stick to indoor hygge.",
-                "Only venture out if you have a spacesuit.",
-                "This is not a drill. The air is legitimately dangerous.",
-                "Absolute worst air possible. Protect yourself.",
-                "We recommend breathing exclusively canned air today.",
-                "Hazardous conditions. Stay inside and stay safe.",
-                "Do not let the fresh air propaganda fool you today.",
-                "Zero stars. Would not recommend breathing today."
-            ];
-            randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            document.documentElement.style.setProperty('--bg-light', bgLight);
+            document.documentElement.style.setProperty('--bg-dark', bgDark);
+            document.getElementById('category-value').innerHTML = category;
+            document.getElementById('message-text').textContent = randomMsg;
         }
 
-        document.documentElement.style.setProperty('--bg-light', bgLight);
-        document.documentElement.style.setProperty('--bg-dark', bgDark);
-        document.getElementById('category-value').innerHTML = category;
-        document.getElementById('message-text').textContent = randomMsg;
+        // 3. CHIAMATA API IN TEMPO REALE AL CARICAMENTO DELLA PAGINA
+        const token = '98ea0fc366155d8052e52647587f3e246ef7f41f';
+        const apiUrl = `https://api.waqi.info/feed/copenhagen/?token=${token}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const aqi = data.data.aqi;
+                    const iaqi = data.data.iaqi;
+                    
+                    // Preleviamo i singoli valori. Se un sensore non trasmette oggi, mostra "--"
+                    const pm25 = iaqi.pm25 ? iaqi.pm25.v : '--';
+                    const pm10 = iaqi.pm10 ? iaqi.pm10.v : '--';
+                    const no2 = iaqi.no2 ? iaqi.no2.v : '--';
+                    const o3 = iaqi.o3 ? iaqi.o3.v : '--';
+
+                    applyDesign(aqi, pm25, pm10, no2, o3);
+                } else {
+                    console.error("API error:", data.data);
+                    applyDesign('--', '--', '--', '--', '--');
+                }
+            })
+            .catch(error => {
+                console.error("Network error:", error);
+            });
 
     </script>
 </body>
