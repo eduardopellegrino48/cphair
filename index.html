@@ -69,7 +69,6 @@
             align-items: flex-end;
         }
 
-        /* NUMERI DATA IN REGULAR (400) */
         .date-num {
             font-size: 260px;
             font-weight: 400; 
@@ -86,7 +85,6 @@
             margin-top: 10px;
         }
 
-        /* FIX LOGO AGGIORNATO */
         .logo-container {
             width: 180px;
             height: 180px;
@@ -108,7 +106,6 @@
             margin: 30px 0;
         }
 
-        /* FIX ALLINEAMENTO ALLA BASE */
         .category-row {
             display: flex;
             justify-content: space-between;
@@ -132,15 +129,17 @@
             max-width: 700px;
         }
 
+        /* FIX: ALLINEAMENTO IN BASSO TRA NUMERO E TABELLA */
         .data-row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: flex-end; /* Sposta l'allineamento alla base di entrambi i blocchi */
         }
 
         .aqi-block {
             display: flex;
             flex-direction: column;
+            margin-bottom: -15px; /* Aggiustamento ottico per allineare perfettamente la linea di base (baseline) del font gigante con quella della tabella O3 */
         }
 
         .aqi-label {
